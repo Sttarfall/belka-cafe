@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Белка — кафе</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --beige:#F2E7D6;
+  --beige-light:#FAF3E6;
+  --black:#221B14;
+  --black-soft:#2C2319;
+  --pumpkin:#E2720C;
+  --pumpkin-deep:#B4590A;
+  --pumpkin-light:#F0985A;
+  --wood:#7A6248;
+  --line:rgba(34,27,20,.14);
+  --line-light:rgba(250,243,230,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--beige);color:var(--black);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}}
+h1,h2,h3,.display{font-family:'Unbounded',sans-serif;letter-spacing:-0.01em;}
+.hand{font-family:'Caveat',cursive;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img,svg{display:block;max-width:100%;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+@media(max-width:640px){.wrap{padding:0 20px;}}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease, transform .8s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:22px 32px;transition:background .35s ease, padding .35s ease, box-shadow .35s ease;}
+.nav.scrolled{background:rgba(242,231,214,.92);backdrop-filter:blur(8px);padding:14px 32px;box-shadow:0 1px 0 var(--line);}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Unbounded';font-weight:700;font-size:20px;}
+.nav-logo svg{width:34px;height:34px;color:var(--pumpkin);}
+.nav-links{display:flex;gap:34px;font-size:15px;font-weight:500;}
+.nav-links a{position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--pumpkin);transition:width .3s ease;}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{background:var(--pumpkin);color:var(--beige-light);padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;transition:transform .25s ease, background .25s ease;}
+.nav-cta:hover{background:var(--pumpkin-deep);transform:translateY(-2px);}
+.nav-burger{display:none;flex-direction:column;gap:5px;width:28px;}
+.nav-burger span{height:2px;background:var(--black);width:100%;transition:transform .3s, opacity .3s;}
+@media(max-width:900px){
+  .nav-links{position:fixed;top:0;right:-100%;height:100vh;width:min(78vw,320px);background:var(--black);color:var(--beige-light);flex-direction:column;justify-content:center;align-items:flex-start;gap:26px;padding:40px;transition:right .4s ease;font-size:19px;}
+  .nav-links.open{right:0;}
+  .nav-links a::after{background:var(--pumpkin-light);}
+  .nav-cta{display:none;}
+  .nav-links .nav-cta-mobile{display:inline-block;background:var(--pumpkin);color:var(--beige-light);padding:10px 22px;border-radius:8px;font-size:15px;}
+  .nav-burger{display:flex;z-index:110;}
+  .nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-burger.open span:nth-child(2){opacity:0;}
+  .nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:140px 32px 60px;text-align:center;overflow:hidden;}
+.hero-bg-squirrel{position:absolute;top:6%;right:-4%;width:340px;color:var(--pumpkin);opacity:.10;transform:rotate(8deg);}
+.eyebrow{font-family:'Caveat';font-size:24px;color:var(--pumpkin-deep);margin-bottom:6px;transform:rotate(-2deg);display:inline-block;}
+.hero h1{font-size:clamp(46px,8vw,88px);font-weight:800;line-height:1;color:var(--black);max-width:820px;}
+.hero h1 span{color:var(--pumpkin);}
+.hero p{margin-top:22px;font-size:19px;max-width:520px;color:var(--wood);}
+.hero-actions{display:flex;gap:16px;margin-top:36px;flex-wrap:wrap;justify-content:center;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;border-radius:8px;font-weight:600;font-size:15px;transition:transform .25s ease, box-shadow .25s ease, background .25s ease;}
+.btn-primary{background:var(--pumpkin);color:var(--beige-light);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(226,114,12,.35);}
+.btn-primary:disabled{opacity:.6;cursor:default;transform:none;}
+.btn-outline{border:1.5px solid var(--black);}
+.btn-outline:hover{background:var(--black);color:var(--beige-light);transform:translateY(-3px);}
+.hero-badges{display:flex;gap:28px;margin-top:56px;flex-wrap:wrap;justify-content:center;}
+.hero-badges div{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.hero-badges b{font-family:'Unbounded';font-size:26px;color:var(--pumpkin-deep);}
+.hero-badges span{font-size:13px;color:var(--wood);}
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;color:var(--wood);}
+.scroll-cue .line{width:1px;height:36px;background:var(--wood);position:relative;overflow:hidden;}
+.scroll-cue .line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--pumpkin);animation:scrolldown 2s ease-in-out infinite;}
+@keyframes scrolldown{0%{top:-100%;}50%{top:0;}100%{top:100%;}}
+
+section{padding:110px 0;}
+@media(max-width:640px){section{padding:76px 0;}}
+.section-head{max-width:640px;margin-bottom:56px;}
+.section-tag{font-family:'Caveat';font-size:22px;color:var(--pumpkin-deep);display:inline-block;transform:rotate(-2deg);margin-bottom:6px;}
+.section-head h2{font-size:clamp(30px,5vw,46px);font-weight:700;}
+.section-head p{margin-top:14px;color:var(--wood);font-size:17px;}
+.section-head.center{margin-left:auto;margin-right:auto;text-align:center;}
+
+.about{background:var(--beige-light);}
+.about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center;}
+.about-photo{aspect-ratio:1/1;border-radius:24px;overflow:hidden;position:relative;background:linear-gradient(150deg,var(--pumpkin-light),var(--pumpkin-deep));display:flex;align-items:center;justify-content:center;}
+.about-photo svg{width:38%;color:rgba(250,243,230,.85);}
+.about-text p{color:var(--wood);margin-bottom:18px;font-size:17px;}
+.about-stats{display:flex;gap:36px;margin-top:32px;flex-wrap:wrap;}
+.about-stats div b{font-family:'Unbounded';font-size:28px;display:block;color:var(--pumpkin-deep);}
+.about-stats div span{font-size:14px;color:var(--wood);}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:40px;}.about-photo{max-width:320px;margin:0 auto;}}
+
+.menu-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:44px;justify-content:center;}
+.menu-tab{padding:10px 22px;border-radius:8px;border:1.5px solid var(--line);font-weight:600;font-size:14px;transition:all .25s ease;}
+.menu-tab.active,.menu-tab:hover{background:var(--black);color:var(--beige-light);border-color:var(--black);}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:900px){.menu-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:640px){.menu-grid{grid-template-columns:1fr;}}
+.menu-card{background:var(--beige-light);border-radius:16px;padding:24px;border:1px solid var(--line);transition:transform .25s ease, box-shadow .25s ease;}
+.menu-card:hover{transform:translateY(-4px);box-shadow:0 14px 26px rgba(34,27,20,.1);}
+.menu-card .mc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.menu-card .mc-name{font-weight:700;font-size:17px;}
+.menu-card .mc-price{font-family:'Unbounded';font-weight:600;color:var(--pumpkin-deep);white-space:nowrap;font-size:15px;}
+.menu-card .mc-desc{color:var(--wood);font-size:14px;}
+.menu-empty{color:var(--wood);font-style:italic;grid-column:1/-1;text-align:center;}
+
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.gallery-grid .g-item:nth-child(3n+1){grid-row:span 2;}
+.g-item{border-radius:16px;position:relative;overflow:hidden;aspect-ratio:1/1;transition:transform .35s ease, box-shadow .35s ease;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(34,27,20,.12);}
+.g-item:nth-child(3n+1){aspect-ratio:1/2.1;}
+.g-item:hover{transform:translateY(-6px);box-shadow:0 16px 30px rgba(34,27,20,.2);}
+.g-item svg{width:34%;opacity:.55;}
+.g-item span{position:absolute;bottom:10px;left:14px;font-family:'Caveat';font-size:16px;color:var(--beige-light);}
+.g1{background:linear-gradient(150deg,#E2720C,#7A6248);}
+.g2{background:linear-gradient(150deg,#2C2319,#221B14);}
+.g3{background:linear-gradient(150deg,#F0985A,#B4590A);}
+.g4{background:linear-gradient(150deg,#7A6248,#2C2319);}
+.g5{background:linear-gradient(150deg,#B4590A,#221B14);}
+.g6{background:linear-gradient(150deg,#D8B589,#7A6248);}
+@media(max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr);}.gallery-grid .g-item:nth-child(3n+1){grid-row:span 1;aspect-ratio:1/1;}}
+
+.contacts{background:var(--beige-light);}
+.contacts-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+.contact-form{display:flex;flex-direction:column;gap:16px;}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--wood);}
+.field input,.field textarea,.field select{width:100%;padding:13px 16px;border:1.5px solid var(--line);border-radius:8px;background:var(--beige);font-family:inherit;font-size:15px;color:var(--black);transition:border-color .2s;}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--pumpkin);}
+.field textarea{resize:vertical;min-height:100px;}
+.form-row{display:flex;gap:14px;}
+.form-row .field{flex:1;}
+.form-note{font-size:13px;color:var(--wood);min-height:20px;}
+.form-note.ok{color:#3a6b3a;}
+.form-note.err{color:#a33;}
+.info-block{display:flex;flex-direction:column;gap:22px;}
+.info-line{display:flex;gap:14px;align-items:flex-start;}
+.info-line svg{width:22px;height:22px;color:var(--pumpkin);flex-shrink:0;margin-top:2px;}
+.info-line b{display:block;}
+.info-line span{color:var(--wood);font-size:14px;}
+.map-embed{border-radius:14px;overflow:hidden;border:1.5px solid var(--line);height:220px;}
+.map-embed iframe{width:100%;height:100%;border:0;filter:sepia(12%) saturate(85%);}
+.socials{display:flex;gap:12px;margin-top:6px;}
+.social-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--black);display:flex;align-items:center;justify-content:center;transition:all .25s ease;}
+.social-btn svg{width:19px;height:19px;}
+.social-btn:hover{background:var(--pumpkin);border-color:var(--pumpkin);color:var(--beige-light);transform:translateY(-3px);}
+@media(max-width:900px){.contacts-grid{grid-template-columns:1fr;}.form-row{flex-direction:column;gap:16px;}}
+
+footer{background:var(--black);color:rgba(250,243,230,.6);padding:40px 0;font-size:13px;}
+.footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-row a:hover{color:var(--beige-light);}
+.admin-link{opacity:.45;transition:opacity .2s;}
+.admin-link:hover{opacity:1;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(34,27,20,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal{background:var(--beige-light);border-radius:18px;max-width:480px;width:100%;padding:36px;max-height:88vh;overflow-y:auto;transform:scale(.94) translateY(10px);transition:transform .3s ease;}
+.modal-overlay.open .modal{transform:scale(1) translateY(0);}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;}
+.modal-head h3{font-size:24px;}
+.modal-close{width:32px;height:32px;border-radius:50%;background:var(--beige);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.modal-close:hover{background:var(--black);color:var(--beige-light);}
+.modal form{display:flex;flex-direction:column;gap:14px;}
+
+.admin-overlay{position:fixed;inset:0;background:var(--beige);z-index:300;overflow-y:auto;display:none;}
+.admin-overlay.open{display:block;}
+.admin-bar{background:var(--black);color:var(--beige-light);padding:18px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;gap:12px;}
+.admin-bar h2{font-size:19px;}
+.admin-bar-actions{display:flex;gap:10px;}
+.admin-body{max-width:900px;margin:0 auto;padding:40px 32px 100px;}
+.admin-tabs{display:flex;gap:10px;margin-bottom:32px;}
+.admin-panel-section{display:none;}
+.admin-panel-section.active{display:block;}
+.admin-item-row{display:grid;grid-template-columns:1fr 1fr 1.4fr 90px 90px;gap:10px;background:var(--beige-light);padding:14px;border-radius:12px;margin-bottom:10px;align-items:center;}
+.admin-item-row input{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--beige);font-family:inherit;}
+.admin-item-row button{background:var(--pumpkin-deep);color:#fff;padding:8px;border-radius:8px;font-size:13px;}
+.admin-item-row .ai-label{display:none;font-size:11px;color:var(--wood);margin-bottom:3px;}
+@media(max-width:760px){
+  .admin-item-row{grid-template-columns:1fr;gap:8px;}
+  .admin-item-row .ai-label{display:block;}
+}
+.admin-add-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+.submission-card{background:var(--beige-light);border-radius:12px;padding:18px 20px;margin-bottom:12px;border-left:4px solid var(--pumpkin);position:relative;}
+.submission-card b{display:block;margin-bottom:4px;}
+.submission-card .meta{font-size:13px;color:var(--wood);}
+.submission-card .del-btn{position:absolute;top:14px;right:14px;font-size:12px;color:var(--wood);}
+.submission-card .del-btn:hover{color:#a33;}
+.login-box{max-width:340px;margin:120px auto;text-align:center;}
+.login-box input{margin:20px 0;}
+.small-btn{background:var(--black);color:var(--beige-light);padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;}
+.small-btn.ghost{background:transparent;border:1px solid var(--line-light);}
+.empty-state{color:var(--wood);font-style:italic;padding:20px 0;}
+.login-error{color:#a33;font-size:14px;margin-top:8px;min-height:18px;}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="nav-logo">
+    <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M60 78c14 4 26-6 26-20 0-10-8-16-8-26 0-9 7-13 7-13s-16-3-20 10c-2-8-10-13-19-11 4 4 4 10 1 14-12 3-21 13-21 26 0 15 12 22 22 22"/><circle cx="42" cy="45" r="2.5" fill="currentColor" stroke="none"/><path d="M28 40c-3-3-8-3-10 0"/></svg>
+    Белка
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about" onclick="closeNav()">О кафе</a>
+    <a href="#menu" onclick="closeNav()">Меню</a>
+    <a href="#gallery" onclick="closeNav()">Фото</a>
+    <a href="#contacts" onclick="closeNav()">Контакты</a>
+    <button class="nav-cta-mobile" onclick="openModal('booking');closeNav()">Забронировать</button>
+  </div>
+  <button class="nav-cta" onclick="openModal('booking')">Забронировать столик</button>
+  <button class="nav-burger" id="burger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+</nav>
+
+<section class="hero" id="top">
+  <svg class="hero-bg-squirrel" viewBox="0 0 220 220" fill="none" stroke="currentColor" stroke-width="5"><path d="M150 170c34 8 56-16 56-46 0-24-18-38-18-58 0-20 16-30 16-30s-36-8-46 22c-4-18-22-28-42-24 9 9 9 22 2 30-28 6-48 30-48 58 0 34 26 50 50 50"/><ellipse cx="92" cy="128" rx="46" ry="40"/></svg>
+  <span class="eyebrow reveal">уютное кафе по соседству</span>
+  <h1 class="reveal">Вкусные блюда.<br>Свой шашлык.<br><span>Кафе «Белка».</span></h1>
+  <p class="reveal">Небольшое кафе, куда приятно заглянуть утром за напитком с собой и остаться на весь вечер за столиком с люля-кебаб. Никакой суеты — только вкусная еда и спокойная атмосфера.</p>
+  <div class="hero-actions reveal">
+    <button class="btn btn-primary" onclick="openModal('booking')">Забронировать столик</button>
+    <a href="#menu" class="btn btn-outline">Смотреть меню</a>
+  </div>
+  <div class="hero-badges reveal">
+    <div><b>11:00</b><span>открываемся утром</span></div>
+    <div><b>100%</b><span>свой шашлык</span></div>
+    <div><b>4.8</b><span>средняя оценка гостей</span></div>
+  </div>
+  <div class="scroll-cue"><span></span><div class="line"></div></div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-photo reveal">
+      <svg viewBox="0 0 220 220" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M150 170c34 8 56-16 56-46 0-24-18-38-18-58 0-20 16-30 16-30s-36-8-46 22c-4-18-22-28-42-24 9 9 9 22 2 30-28 6-48 30-48 58 0 34 26 50 50 50"/>
+        <ellipse cx="92" cy="128" rx="46" ry="40"/>
+        <circle cx="62" cy="98" r="4" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+    <div class="about-text reveal">
+      <span class="section-tag">о кафе</span>
+      <h2 style="margin-bottom:20px;">Простое кафе с хорошей едой</h2>
+      <p>«Белка» — это небольшое семейное кафе. Никакой сложной концепции: мы просто любим хороший кофе, свежий шашлык и разговоры за соседним столиком. Делаем сами каждое утро, поэтому заходите пораньше.</p>
+      <p>У нас удобно поработать с ноутбуком в будни, собраться с друзьями по выходным и просто выпить чашку кофе по дороге на работу.</p>
+      <div class="about-stats">
+        <div><b>3</b><span>года работы</span></div>
+        <div><b>100</b><span>мест в зале</span></div>
+        <div><b>50+</b><span>позиций в меню</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="section-tag">меню</span>
+      <h2>Что у нас есть</h2>
+      <p>Меню меняется по сезону — актуальные позиции и цены ниже.</p>
+    </div>
+    <div class="menu-tabs reveal" id="menuTabs"></div>
+    <div class="menu-grid reveal" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- <section id="gallery" style="background:var(--beige-light);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-tag">фото</span>
+      <h2>Загляните внутрь</h2>
+      <p>Немного атмосферы нашего зала и того, что мы готовим.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="g-item g1"><svg viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="30"/></svg><span>зал</span></div>
+      <div class="g-item g2"><svg viewBox="0 0 100 100" fill="currentColor"><rect x="25" y="25" width="50" height="50"/></svg><span>выпечка</span></div>
+      <div class="g-item g3"><svg viewBox="0 0 100 100" fill="currentColor"><path d="M50 20l30 60H20z"/></svg><span>кофе</span></div>
+      <div class="g-item g4"><svg viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="30"/></svg><span>утро</span></div>
+      <div class="g-item g5"><svg viewBox="0 0 100 100" fill="currentColor"><rect x="25" y="25" width="50" height="50"/></svg><span>барная стойка</span></div>
+      <div class="g-item g6"><svg viewBox="0 0 100 100" fill="currentColor"><path d="M50 20l30 60H20z"/></svg><span>десерты</span></div>
+    </div>
+    <p style="margin-top:20px;color:var(--wood);font-size:14px;">* здесь размещены декоративные заглушки — замените на настоящие фотографии кафе.</p>
+  </div>
+</section> -->
+
+<section class="contacts" id="contacts">
+  <div class="wrap contacts-grid">
+    <div class="reveal">
+      <span class="section-tag">контакты</span>
+      <h2 style="margin-bottom:24px;">Напишите нам</h2>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="field"><label>Имя</label><input type="text" required name="name"></div>
+          <div class="field"><label>Телефон или email</label><input type="text" required name="contact"></div>
+        </div>
+        <div class="field"><label>Сообщение</label><textarea required name="message" placeholder="Ваш вопрос или пожелание"></textarea></div>
+        <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Отправить сообщение</button>
+        <div class="form-note" id="contactNote"></div>
+      </form>
+    </div>
+    <div class="reveal">
+      <div class="info-block">
+        <div class="info-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <div><b>Адрес</b><span>ул. Орджоникидзе 58А/1</span></div>
+        </div>
+        <div class="info-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+          <div><b>Часы работы</b><span>Пн–Вс 11:00–23:00</span></div>
+        </div>
+        <div class="info-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8.1 9.7a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.7 2.2z"/></svg>
+          <div><b>Телефон</b><span>+7 (900) 026-50-11</span></div>
+        </div>
+        <div class="map-embed">
+          <iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=37.615%2C55.752%2C37.630%2C55.760&layer=mapnik&marker=55.756%2C37.622"></iframe>
+        </div>
+        <div class="socials">
+          <!-- <a class="social-btn" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a class="social-btn" href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3L2 11l6 2m14-10l-4 18-8-6m12-12L8 13m0 0v6l3-3"/></svg></a> -->
+          <a class="social-btn" href="https://vk.ru/cafe_belka74" aria-label="VK"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4c.5 9 5 14 9 14M4 4h3m10 0h3m-3 0c0 3-2 6-4 8m6-8c-.5 3-2 6-4 8m-2 0v6m0-6c2 0 4 2 6 6"/></svg></a>
+        </div>
+        <p style="font-size:13px;color:var(--wood);">* карта и ссылки на соцсети — заглушки, замените на реальные данные кафе.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>© 2026 Кафе «Белка». Все права защищены.</span>
+    <a href="#" class="admin-link" onclick="openAdmin(event)">Панель администратора</a>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="bookingOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3>Бронирование столика</h3><button class="modal-close" onclick="closeModal('booking')">✕</button></div>
+    <form id="bookingForm">
+      <div class="field"><label>Имя</label><input type="text" name="name" required></div>
+      <div class="form-row">
+        <div class="field"><label>Телефон</label><input type="tel" name="phone" id="bookingPhone" placeholder="+7 (___) ___-__-__" required></div>
+        <div class="field"><label>Гостей</label><input type="number" name="guests" min="1" max="20" value="2" required></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Дата</label><input type="date" name="date" id="bookingDate" required></div>
+        <div class="field"><label>Время</label><input type="time" name="time" id="bookingTime" min="11:00" max="23:00" required></div>
+      </div>
+      <div class="field"><label>Комментарий</label><textarea name="comment" placeholder="Пожелания к столику"></textarea></div>
+      <button type="submit" class="btn btn-primary">Забронировать</button>
+      <div class="form-note" id="bookingNote"></div>
+    </form>
+  </div>
+</div>
+
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-bar">
+    <h2>Белка · Панель администратора</h2>
+    <div class="admin-bar-actions">
+      <button class="small-btn ghost" id="adminLogoutBtn" style="display:none;" onclick="adminLogout()">Выйти</button>
+      <button class="small-btn" onclick="closeAdmin()">Закрыть</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div id="adminLoginBox" class="login-box">
+      <h3>Вход для администратора</h3>
+      <input type="password" id="adminPass" placeholder="Пароль" style="padding:12px 16px;border:1.5px solid var(--line);border-radius:8px;width:100%;background:var(--beige-light);">
+      <div><button class="btn btn-primary" onclick="tryAdminLogin()">Войти</button></div>
+      <div class="login-error" id="loginError"></div>
+    </div>
+    <div id="adminContent" style="display:none;">
+      <div class="admin-tabs">
+        <button class="menu-tab active" onclick="switchAdminTab('menu')" id="tabBtn-menu">Меню</button>
+        <button class="menu-tab" onclick="switchAdminTab('subs')" id="tabBtn-subs">Заявки</button>
+      </div>
+      <div class="admin-panel-section active" id="adminPanel-menu">
+        <h3 style="margin-bottom:16px;">Позиции меню</h3>
+        <div id="adminMenuList"></div>
+        <h4 style="margin:24px 0 12px;">Добавить позицию</h4>
+        <div class="admin-add-row">
+          <input type="text" id="newCat" placeholder="Категория" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px;">
+          <input type="text" id="newName" placeholder="Название" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px;">
+          <input type="text" id="newDesc" placeholder="Описание" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px;flex:1;">
+          <input type="number" id="newPrice" placeholder="Цена" style="padding:9px 10px;border:1px solid var(--line);border-radius:8px;width:90px;">
+          <button class="small-btn" onclick="addMenuItem()">Добавить</button>
+        </div>
+      </div>
+      <div class="admin-panel-section" id="adminPanel-subs">
+        <h3 style="margin-bottom:16px;">Бронирования столиков</h3>
+        <div id="adminBookings"></div>
+        <h3 style="margin:32px 0 16px;">Сообщения обратной связи</h3>
+        <div id="adminMessages"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- API helpers ---------------- */
+async function api(path, options = {}) {
+  const res = await fetch(path, {
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    ...options,
+  });
+  let data = null;
+  try { data = await res.json(); } catch (e) { /* no body */ }
+  if (!res.ok) {
+    const err = new Error((data && data.error) || 'Ошибка запроса');
+    err.status = res.status;
+    throw err;
+  }
+  return data;
+}
+
+/* ---------------- меню ---------------- */
+let menuItems = [];
+let activeCategory = 'Все';
+
+async function loadMenu(){
+  try {
+    menuItems = await api('/api/menu');
+  } catch(e) {
+    menuItems = [];
+  }
+  renderMenuTabs(); renderMenuGrid();
+}
+function renderMenuTabs(){
+  const cats = ['Все', ...new Set(menuItems.map(i=>i.category))];
+  document.getElementById('menuTabs').innerHTML = cats.map(c=>`<button class="menu-tab${c===activeCategory?' active':''}" onclick="setCategory('${c.replace(/'/g,"\\'")}')">${c}</button>`).join('');
+}
+function setCategory(c){ activeCategory = c; renderMenuTabs(); renderMenuGrid(); }
+function renderMenuGrid(){
+  const grid = document.getElementById('menuGrid');
+  const items = activeCategory==='Все' ? menuItems : menuItems.filter(i=>i.category===activeCategory);
+  if(!items.length){ grid.innerHTML = '<p class="menu-empty">Пока нет позиций в этой категории.</p>'; return; }
+  grid.innerHTML = items.map(i=>`
+    <div class="menu-card">
+      <div class="mc-top"><span class="mc-name">${escapeHtml(i.name)}</span><span class="mc-price">${i.price>0?i.price+' ₽':'—'}</span></div>
+      ${i.description?`<div class="mc-desc">${escapeHtml(i.description)}</div>`:''}
+    </div>`).join('');
+}
+function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+/* ---------------- nav ---------------- */
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', ()=>{ navEl.classList.toggle('scrolled', window.scrollY > 40); });
+function toggleNav(){ document.getElementById('navLinks').classList.toggle('open'); document.getElementById('burger').classList.toggle('open'); }
+function closeNav(){ document.getElementById('navLinks').classList.remove('open'); document.getElementById('burger').classList.remove('open'); }
+
+/* ---------------- reveal ---------------- */
+const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }); },{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---------------- modals ---------------- */
+function openModal(name){ if (name === 'booking' && typeof setBookingDateTimeConstraints === 'function') setBookingDateTimeConstraints(); document.getElementById(name+'Overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(name){ document.getElementById(name+'Overlay').classList.remove('open'); document.body.style.overflow=''; }
+document.querySelectorAll('.modal-overlay').forEach(ov=>{ ov.addEventListener('click', (e)=>{ if(e.target===ov){ ov.classList.remove('open'); document.body.style.overflow=''; } }); });
+
+/* ---------------- booking constraints: телефон, дата, время ---------------- */
+function formatRuPhone(raw){
+  let digits = (raw || '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits[0] === '8') digits = '7' + digits.slice(1);
+  if (digits[0] !== '7') digits = '7' + digits;
+  digits = digits.slice(0, 11);
+  const rest = digits.slice(1); // до 10 цифр после 7
+  let out = '+7';
+  if (rest.length > 0) out += ' (' + rest.slice(0, 3);
+  if (rest.length >= 3) out += ')';
+  if (rest.length > 3) out += ' ' + rest.slice(3, 6);
+  if (rest.length > 6) out += '-' + rest.slice(6, 8);
+  if (rest.length > 8) out += '-' + rest.slice(8, 10);
+  return out;
+}
+const bookingPhoneInput = document.getElementById('bookingPhone');
+bookingPhoneInput.addEventListener('input', function(){
+  this.value = formatRuPhone(this.value);
+});
+bookingPhoneInput.addEventListener('focus', function(){
+  if (!this.value) this.value = '+7 ';
+});
+
+function setBookingDateTimeConstraints(){
+  const dateInput = document.getElementById('bookingDate');
+  const timeInput = document.getElementById('bookingTime');
+  const today = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const todayStr = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  const yearEndStr = `${today.getFullYear()}-12-31`;
+  dateInput.min = todayStr;
+  dateInput.max = yearEndStr;
+  timeInput.min = '11:00';
+  timeInput.max = '23:00';
+}
+setBookingDateTimeConstraints();
+
+function validateBookingFields({ phone, date, time }){
+  const digits = (phone || '').replace(/\D/g, '');
+  if (!(digits.length === 11 && (digits[0] === '7' || digits[0] === '8'))) {
+    return 'Введите номер телефона в формате +7 (___) ___-__-__';
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) {
+    return 'Укажите дату бронирования';
+  }
+  const selected = new Date(date + 'T00:00:00');
+  const now = new Date(); now.setHours(0,0,0,0);
+  if (isNaN(selected.getTime()) || selected < now) {
+    return 'Дата бронирования не может быть раньше сегодняшнего дня';
+  }
+  if (selected.getFullYear() !== now.getFullYear()) {
+    return 'Пожалуйста, выберите дату в этом году';
+  }
+  if (!/^\d{2}:\d{2}$/.test(time || '')) {
+    return 'Укажите время бронирования';
+  }
+  const [h, m] = time.split(':').map(Number);
+  const minutes = h * 60 + m;
+  if (minutes < 11*60 || minutes > 23*60) {
+    return 'Мы принимаем брони с 11:00 до 23:00';
+  }
+  return null;
+}
+
+/* ---------------- booking form ---------------- */
+document.getElementById('bookingForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const note = document.getElementById('bookingNote');
+  note.classList.remove('ok','err');
+
+  const payload = {
+    name:f.get('name'), phone:f.get('phone'), guests:f.get('guests'),
+    date:f.get('date'), time:f.get('time'), comment:f.get('comment')
+  };
+  const validationError = validateBookingFields(payload);
+  if (validationError) {
+    note.textContent = validationError;
+    note.classList.add('err');
+    return;
+  }
+
+  note.textContent = 'Отправляем...';
+  try{
+    await api('/api/bookings', { method:'POST', body: JSON.stringify(payload) });
+    note.textContent = 'Заявка на бронирование отправлена. Мы свяжемся с вами!'; note.classList.add('ok');
+    e.target.reset();
+    setTimeout(()=>closeModal('booking'), 1600);
+  }catch(err){ note.textContent = err.message || 'Не получилось отправить, попробуйте ещё раз.'; note.classList.add('err'); }
+});
+
+/* ---------------- contact form ---------------- */
+document.getElementById('contactForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const note = document.getElementById('contactNote');
+  note.textContent = 'Отправляем...'; note.classList.remove('ok','err');
+  try{
+    await api('/api/messages', { method:'POST', body: JSON.stringify({
+      name:f.get('name'), contact:f.get('contact'), message:f.get('message')
+    })});
+    note.textContent = 'Спасибо! Сообщение отправлено.'; note.classList.add('ok');
+    e.target.reset();
+  }catch(err){ note.textContent = err.message || 'Не получилось отправить, попробуйте ещё раз.'; note.classList.add('err'); }
+});
+
+/* ---------------- admin ---------------- */
+function openAdmin(e){
+  e.preventDefault();
+  document.getElementById('adminOverlay').classList.add('open');
+  checkAdminSession();
+}
+function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('open'); }
+
+async function checkAdminSession(){
+  try{
+    const { loggedIn } = await api('/api/admin/session');
+    if(loggedIn){ showAdminContent(); } else { showAdminLogin(); }
+  }catch(e){ showAdminLogin(); }
+}
+function showAdminLogin(){
+  document.getElementById('adminLoginBox').style.display='block';
+  document.getElementById('adminContent').style.display='none';
+  document.getElementById('adminLogoutBtn').style.display='none';
+}
+function showAdminContent(){
+  document.getElementById('adminLoginBox').style.display='none';
+  document.getElementById('adminContent').style.display='block';
+  document.getElementById('adminLogoutBtn').style.display='inline-block';
+  renderAdminMenu(); renderAdminSubmissions();
+}
+async function tryAdminLogin(){
+  const val = document.getElementById('adminPass').value;
+  const errBox = document.getElementById('loginError');
+  errBox.textContent = '';
+  try{
+    await api('/api/admin/login', { method:'POST', body: JSON.stringify({ password: val }) });
+    document.getElementById('adminPass').value = '';
+    showAdminContent();
+  }catch(err){
+    errBox.textContent = err.message || 'Неверный пароль';
+  }
+}
+async function adminLogout(){
+  try{ await api('/api/admin/logout', { method:'POST' }); }catch(e){}
+  showAdminLogin();
+}
+function switchAdminTab(tab){
+  document.querySelectorAll('.admin-panel-section').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.admin-tabs .menu-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('adminPanel-'+tab).classList.add('active');
+  document.getElementById('tabBtn-'+tab).classList.add('active');
+}
+
+function renderAdminMenu(){
+  const list = document.getElementById('adminMenuList');
+  list.innerHTML = menuItems.map(i=>`
+    <div class="admin-item-row">
+      <div><span class="ai-label">Название</span><input value="${escapeAttr(i.name)}" onchange="updateMenuField('${i.id}','name',this.value)"></div>
+      <div><span class="ai-label">Категория</span><input value="${escapeAttr(i.category)}" onchange="updateMenuField('${i.id}','category',this.value)"></div>
+      <div><span class="ai-label">Дополнительно</span><input value="${escapeAttr(i.description)}" placeholder="Описание (необязательно)" onchange="updateMenuField('${i.id}','description',this.value)"></div>
+      <div><span class="ai-label">Цена</span><input type="number" value="${i.price}" onchange="updateMenuField('${i.id}','price',this.value)"></div>
+      <button onclick="deleteMenuItem('${i.id}')">Удалить</button>
+    </div>`).join('') || '<p class="empty-state">Меню пусто.</p>';
+}
+function escapeAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+
+async function updateMenuField(id, field, value){
+  const item = menuItems.find(i=>i.id===id); if(!item) return;
+  const payload = { category:item.category, name:item.name, description:item.description, price:item.price };
+  payload[field] = field==='price' ? Number(value) : value;
+  try{
+    const updated = await api('/api/menu/'+id, { method:'PUT', body: JSON.stringify(payload) });
+    Object.assign(item, updated);
+    renderMenuTabs(); renderMenuGrid();
+  }catch(e){ alert('Не удалось сохранить изменение: ' + e.message); loadMenu(); }
+}
+async function deleteMenuItem(id){
+  if(!confirm('Удалить эту позицию меню?')) return;
+  try{
+    await api('/api/menu/'+id, { method:'DELETE' });
+    menuItems = menuItems.filter(i=>i.id!==id);
+    renderAdminMenu(); renderMenuTabs(); renderMenuGrid();
+  }catch(e){ alert('Не удалось удалить: ' + e.message); }
+}
+async function addMenuItem(){
+  const category = document.getElementById('newCat').value.trim();
+  const name = document.getElementById('newName').value.trim();
+  const description = document.getElementById('newDesc').value.trim();
+  const price = Number(document.getElementById('newPrice').value) || 0;
+  if(!category || !name) return alert('Укажите хотя бы категорию и название');
+  try{
+    const item = await api('/api/menu', { method:'POST', body: JSON.stringify({ category, name, description, price }) });
+    menuItems.push(item);
+    ['newCat','newName','newDesc','newPrice'].forEach(id=>document.getElementById(id).value='');
+    renderAdminMenu(); renderMenuTabs(); renderMenuGrid();
+  }catch(e){ alert('Не удалось добавить: ' + e.message); }
+}
+
+async function renderAdminSubmissions(){
+  try{
+    const [bookings, messages] = await Promise.all([api('/api/bookings'), api('/api/messages')]);
+    const b = document.getElementById('adminBookings');
+    const msg = document.getElementById('adminMessages');
+    b.innerHTML = bookings.length ? bookings.map(x=>`
+      <div class="submission-card">
+        <button class="del-btn" onclick="deleteBooking(${x.id})">удалить</button>
+        <b>${escapeHtml(x.name)} · ${escapeHtml(x.guests || '?')} гостей</b>
+        <div class="meta">${escapeHtml(x.booking_date)} в ${escapeHtml(x.booking_time)} · тел. ${escapeHtml(x.phone)}</div>
+        ${x.comment?`<div style="margin-top:6px;">${escapeHtml(x.comment)}</div>`:''}
+      </div>`).join('') : '<p class="empty-state">Пока нет броней.</p>';
+    msg.innerHTML = messages.length ? messages.map(x=>`
+      <div class="submission-card">
+        <button class="del-btn" onclick="deleteMessage(${x.id})">удалить</button>
+        <b>${escapeHtml(x.name)}</b>
+        <div class="meta">контакт: ${escapeHtml(x.contact)}</div>
+        <div style="margin-top:6px;">${escapeHtml(x.message)}</div>
+      </div>`).join('') : '<p class="empty-state">Пока нет сообщений.</p>';
+  }catch(e){
+    // сессия могла истечь
+    showAdminLogin();
+  }
+}
+async function deleteBooking(id){
+  if(!confirm('Удалить эту бронь из списка?')) return;
+  try{ await api('/api/bookings/'+id, { method:'DELETE' }); renderAdminSubmissions(); }catch(e){ alert(e.message); }
+}
+async function deleteMessage(id){
+  if(!confirm('Удалить это сообщение?')) return;
+  try{ await api('/api/messages/'+id, { method:'DELETE' }); renderAdminSubmissions(); }catch(e){ alert(e.message); }
+}
+
+loadMenu();
+</script>
+</body>
+</html>
